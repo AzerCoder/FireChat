@@ -1,0 +1,6 @@
+framework module Pods_FireChatX {
+  umbrella header "Pods-FireChatX-umbrella.h"
+
+  export *
+  module * { export * }
+}

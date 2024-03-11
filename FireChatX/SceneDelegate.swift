@@ -16,7 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        initRootVC(windowScene: windowScene)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -50,3 +51,40 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 }
 
+extension SceneDelegate{
+    
+    func initRootVC(windowScene: UIWindowScene){
+        
+        let mainNav = MainNavController.instantiate(from: .Main)
+        
+        if !UserDefaults.standard.isUserAuthorized(){
+            setVCAsNavRootVC(nav: mainNav, rootVC: ViewController.instantiate(from: .Main))
+        }
+        
+        self.window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        
+        window?.windowScene = windowScene
+        window?.rootViewController = mainNav
+        window?.makeKeyAndVisible()
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.window = window
+    }
+    
+    func setVCAsNavRootVC(nav: UINavigationController, rootVC : UIViewController){
+        nav.viewControllers.removeAll()
+        nav.viewControllers = [rootVC]
+    }
+    
+    func setChatVcAsRootVc(){
+        let mainNav = MainNavController.instantiate(from: .Main)
+        setVCAsNavRootVC(nav: mainNav, rootVC: ChatViewController.instantiate(from: .Main))
+        window?.rootViewController = mainNav
+    }
+    
+    func setLogVcAsRootVc(){
+        let mainNav = MainNavController.instantiate(from: .Main)
+        setVCAsNavRootVC(nav: mainNav, rootVC: ViewController.instantiate(from: .Main))
+        window?.rootViewController = mainNav
+    }
+}
